@@ -21,7 +21,7 @@ type BTCHandler struct {
 }
 
 func NewBTCHandler(address string) *BTCHandler {
-	b := BTCHandler{Address: address}
+	b := BTCHandler{Address: address, ConnectTimeout: 10 * time.Second}
 	return &b
 }
 
@@ -80,7 +80,10 @@ func (b *BTCHandler) Handshake() (result models.Result, err error) {
 	if err = b.WriteMessage(wire.NewMsgVerAck()); err != nil {
 		return
 	}
-	log.Infof("height:%d", vmsg.LastBlock)
+	result.Height = int64(vmsg.LastBlock)
+	result.Address = b.Address
+	result.UserAgent = vmsg.UserAgent
+	result.Timestamp = vmsg.Timestamp.UTC().Format("2006-01-02 15:04:05")
 	return
 }
 

@@ -5,7 +5,7 @@ import "github.com/jinzhu/configor"
 // config
 var Config = struct {
 	Name           string `default:"app_name"`
-	IsDebug        bool
+	Debug          bool
 	MonitorName    string `default:"api-monitor"`
 	CoinType       string
 	GlobalDatabase MySQLDB

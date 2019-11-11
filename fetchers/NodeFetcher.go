@@ -1,25 +1,27 @@
 package fetchers
 
 import (
-	"fmt"
 	"github.com/dubuqingfeng/bit-node-crawler/handlers/coins"
 	"github.com/dubuqingfeng/bit-node-crawler/helpers"
+	"github.com/dubuqingfeng/bit-node-crawler/models"
 	"github.com/dubuqingfeng/bit-node-crawler/seeds"
 	log "github.com/sirupsen/logrus"
 	"reflect"
+	"strings"
 	"sync"
 )
 
 type NodeFetcher struct {
 	Coin        string
 	workerChan  chan []string
-	resultChan  chan string
+	resultChan  chan models.Result
 	wg          sync.WaitGroup
 	checkFilter map[string]bool
 }
 
-func NewNodeFetcher() NodeFetcher {
-	return NodeFetcher{workerChan: make(chan []string), resultChan: make(chan string)}
+func NewNodeFetcher(coin string) NodeFetcher {
+	// TODO add config for limit
+	return NodeFetcher{workerChan: make(chan []string), resultChan: make(chan models.Result), Coin: coin}
 }
 
 // add addresses to channel
@@ -36,6 +38,7 @@ func (n *NodeFetcher) AddPeers(peers []string) {
 // run the crawler
 func (n *NodeFetcher) Run() {
 	// get seeds from default dns
+	// TODO by n.Coin
 	seedNodes := helpers.GetSeedsFromDNS(seeds.DefaultBTCDnsSeeds)
 	// start crawl from seedNodes
 	go n.AddPeers(seedNodes)
@@ -43,12 +46,12 @@ func (n *NodeFetcher) Run() {
 	go func() { n.wg.Wait() }()
 	// receive the worker(peers) / result channel
 	for {
+		// TODO when after the completion of the closed channel
 		select {
 		case peers := <-n.workerChan:
 			go n.AddPeers(peers)
 		case result := <-n.resultChan:
-			n.WriteResult(result)
-			// when after the completion of the closed channel
+			go n.WriteResult(result)
 		}
 	}
 }
@@ -86,12 +89,17 @@ func (n *NodeFetcher) HandleAddress(address string) {
 	if len(addresses) != 0 && !reflect.DeepEqual(addresses, []string{address}) {
 		log.Info(addresses)
 		log.Info(address)
-		// add config
+		// TODO add config
 		n.workerChan <- addresses
 	}
-	n.resultChan <- address + "success" + result.Status
+	result.CoinType = n.Coin
+	result.Peers = strings.Join(addresses, ",")
+	n.resultChan <- result
 }
 
-func (n *NodeFetcher) WriteResult(result string) {
-	fmt.Println(result)
+func (n *NodeFetcher) WriteResult(result models.Result) {
+	// write to database.
+	if err := models.InsertOrUpdatePeer(result); err != nil {
+		log.Error(err)
+	}
 }

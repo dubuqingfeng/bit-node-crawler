@@ -25,7 +25,7 @@ func main() {
 	//	log.Error(err)
 	//}
 	c.Start()
-	if utils.Config.IsDebug {
+	if utils.Config.Debug {
 		go func() {
 			if err := http.ListenAndServe("0.0.0.0:6060", nil); err != nil {
 				log.Error(err)
