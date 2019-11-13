@@ -13,11 +13,12 @@ import (
 )
 
 type NodeFetcher struct {
-	Coin        string
-	workerChan  chan []string
-	resultChan  chan models.Result
-	wg          sync.WaitGroup
-	checkFilter map[string]bool
+	Coin           string
+	workerChan     chan []string
+	resultChan     chan models.Result
+	wg             sync.WaitGroup
+	checkFilter    map[string]bool
+	completeFilter map[string]bool
 }
 
 func NewNodeFetcher(coin string) NodeFetcher {
@@ -29,10 +30,11 @@ func NewNodeFetcher(coin string) NodeFetcher {
 func (n *NodeFetcher) AddPeers(peers []string) {
 	for _, peer := range peers {
 		// bloom filter
-		// TODO need remove duplicate
-		// map
-		n.wg.Add(1)
-		go n.HandleAddress(peer)
+		state, ok := n.checkFilter[peer]
+		if !ok || !state {
+			n.wg.Add(1)
+			go n.HandleAddress(peer)
+		}
 	}
 }
 
@@ -46,7 +48,12 @@ func (n *NodeFetcher) Run() {
 	go func() { n.wg.Wait() }()
 	// receive the worker(peers) / result channel
 	for {
-		// TODO when after the completion of the closed channel
+		// close the channel when completed
+		if len(n.checkFilter) <= len(n.completeFilter) {
+			close(n.workerChan)
+			close(n.resultChan)
+			break
+		}
 		select {
 		case peers := <-n.workerChan:
 			go n.AddPeers(peers)
@@ -58,6 +65,7 @@ func (n *NodeFetcher) Run() {
 
 // handle address
 func (n *NodeFetcher) HandleAddress(address string) {
+	n.checkFilter[address] = true
 	// initialize the handler
 	handler, err := coins.HandlerFactory(n.Coin, address)
 	if err != nil {
@@ -69,8 +77,10 @@ func (n *NodeFetcher) HandleAddress(address string) {
 		log.Error(err)
 		return
 	}
-	defer handler.DisConnect()
+	// FILO stack
+	defer func() { n.completeFilter[address] = true }()
 	defer n.wg.Done()
+	defer handler.DisConnect()
 	// send version and version ack
 	result, err := handler.Handshake()
 	if err != nil {

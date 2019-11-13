@@ -22,7 +22,7 @@ func InsertOrUpdatePeer(peer Result) error {
 		"height = ?, peers = ?, timestamp = ?, user_agent = ?, updated_at = ?, notified_at = ? ")
 	_, err := dbs.DBMaps[conn].Exec(stmt, peer.Address, peer.Height,
 		peer.Peers, peer.UserAgent, peer.CoinType, peer.Timestamp,
-		now, now, now,  "1970-01-01 00:00:00", peer.Height, peer.Peers, peer.Timestamp, peer.UserAgent, now, now)
+		now, now, now, utils.UTCFirstDatetime, peer.Height, peer.Peers, peer.Timestamp, peer.UserAgent, now, now)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -30,6 +30,7 @@ func InsertOrUpdatePeer(peer Result) error {
 	return nil
 }
 
+// For the use of StatusFetcher
 func GetAllPeers() ([]Result, error) {
 	conn := utils.Config.GlobalDatabase.Write.Name
 	var results []Result
@@ -72,7 +73,8 @@ func InsertOrUpdateNode(peer Result) error {
 		"height = ?, peers = ?, timestamp = ?, user_agent = ?, updated_at = ?, notified_at = ?, height_changed_at = ? ")
 	_, err := dbs.DBMaps[conn].Exec(stmt, peer.Address, peer.Height,
 		peer.Peers, peer.UserAgent, peer.CoinType, peer.Timestamp,
-		now, now, now, "1970-01-01 00:00:00", peer.Height, peer.Peers, peer.Timestamp, peer.UserAgent, now, now, peer.HeightChangedAt)
+		now, now, now, utils.UTCFirstDatetime, peer.Height, peer.Peers, peer.Timestamp,
+		peer.UserAgent, now, now, peer.HeightChangedAt)
 	if err != nil {
 		log.Error(err)
 		return err

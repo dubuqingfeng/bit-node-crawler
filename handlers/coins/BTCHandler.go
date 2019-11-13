@@ -83,7 +83,7 @@ func (b *BTCHandler) Handshake() (result models.Result, err error) {
 	result.Height = int64(vmsg.LastBlock)
 	result.Address = b.Address
 	result.UserAgent = vmsg.UserAgent
-	result.Timestamp = vmsg.Timestamp.UTC().Format("2006-01-02 15:04:05")
+	result.Timestamp = vmsg.Timestamp.UTC().Format(utils.UTCDatetime)
 	return
 }
 
