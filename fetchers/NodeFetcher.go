@@ -5,6 +5,7 @@ import (
 	"github.com/dubuqingfeng/bit-node-crawler/helpers"
 	"github.com/dubuqingfeng/bit-node-crawler/models"
 	"github.com/dubuqingfeng/bit-node-crawler/seeds"
+	"github.com/dubuqingfeng/bit-node-crawler/utils"
 	log "github.com/sirupsen/logrus"
 	"reflect"
 	"strings"
@@ -20,8 +21,8 @@ type NodeFetcher struct {
 }
 
 func NewNodeFetcher(coin string) NodeFetcher {
-	// TODO add config for limit
-	return NodeFetcher{workerChan: make(chan []string), resultChan: make(chan models.Result), Coin: coin}
+	return NodeFetcher{workerChan: make(chan []string, utils.Config.Concurrency),
+		resultChan: make(chan models.Result), Coin: coin}
 }
 
 // add addresses to channel
@@ -38,8 +39,7 @@ func (n *NodeFetcher) AddPeers(peers []string) {
 // run the crawler
 func (n *NodeFetcher) Run() {
 	// get seeds from default dns
-	// TODO by n.Coin
-	seedNodes := helpers.GetSeedsFromDNS(seeds.DefaultBTCDnsSeeds)
+	seedNodes := helpers.GetSeedsFromDNS(seeds.GetDefaultDNSSeeds(n.Coin))
 	// start crawl from seedNodes
 	go n.AddPeers(seedNodes)
 	// wait group
@@ -89,8 +89,9 @@ func (n *NodeFetcher) HandleAddress(address string) {
 	if len(addresses) != 0 && !reflect.DeepEqual(addresses, []string{address}) {
 		log.Info(addresses)
 		log.Info(address)
-		// TODO add config
-		n.workerChan <- addresses
+		if !utils.Config.OnlyFetchDefaultSeeds {
+			n.workerChan <- addresses
+		}
 	}
 	result.CoinType = n.Coin
 	result.Peers = strings.Join(addresses, ",")

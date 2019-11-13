@@ -1,7 +1,7 @@
 CREATE TABLE `peers` (
   `address` varchar(255) NOT NULL DEFAULT '',
   `height` bigint(20) NOT NULL DEFAULT '0',
-  `peers` varchar(255) NOT NULL DEFAULT '',
+  `peers` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `user_agent` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `type` varchar(255) NOT NULL DEFAULT '',
   `prev_hash` varchar(255) NOT NULL DEFAULT '',

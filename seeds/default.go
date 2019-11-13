@@ -1,6 +1,8 @@
 package seeds
 
-var DefaultBTCDnsSeeds = []string{
+import "strings"
+
+var DefaultBTCDNSSeeds = []string{
 	"seed.bitcoin.sipa.be",
 	"dnsseed.bluematt.me",
 	"dnsseed.bitcoin.dashjr.org",
@@ -12,11 +14,32 @@ var DefaultBTCDnsSeeds = []string{
 	"dnsseed.emzy.de",
 }
 
-var DefaultBCHDnsSeeds = []string{
+var DefaultBCHDNSSeeds = []string{
 	"seed.bitcoinabc.org",
 	"seed-abc.bitcoinforks.org",
 	"btccash-seeder.bitcoinunlimited.info",
 	"seed.bitprim.org",
 	"seed.deadalnix.me",
 	"seed.bchd.cash",
+}
+
+var DefaultBSVDNSSeeds = []string{
+	"seed.bitcoinsv.io",
+	"seed.cascharia.com",
+	"seed.satoshisvision.network",
+}
+
+func GetDefaultDNSSeeds(coin string) []string {
+	// TODO add testnet
+	coin = strings.ToLower(coin)
+	if coin == "btc" {
+		return DefaultBTCDNSSeeds
+	}
+	if coin == "bch" {
+		return DefaultBCHDNSSeeds
+	}
+	if coin == "bsv" {
+		return DefaultBSVDNSSeeds
+	}
+	return DefaultBTCDNSSeeds
 }

@@ -1,0 +1,10 @@
+name: ""
+monitorname: "电脑"
+debug: true
+globaldatabase:
+  read:
+    name: "global:read"
+    dsn: "root:@tcp(127.0.0.1:3306)/peers?charset=utf8mb4"
+  write:
+    name: "global:write"
+    dsn: "root:@tcp(127.0.0.1:3306)/peers?charset=utf8mb4"

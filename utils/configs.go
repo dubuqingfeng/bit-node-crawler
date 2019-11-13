@@ -1,14 +1,22 @@
 package utils
 
-import "github.com/jinzhu/configor"
+import (
+	"github.com/jinzhu/configor"
+	"time"
+)
 
 // config
 var Config = struct {
 	Name           string `default:"app_name"`
 	Debug          bool
-	MonitorName    string `default:"api-monitor"`
-	CoinType       string
+	MonitorName    string `default:"bit-node-crawler"`
+	CoinType       string `default:"btc"`
 	GlobalDatabase MySQLDB
+	// crawl config
+	Concurrency           int           `default:"0"`
+	ConnectTimeout        time.Duration `default:"10s"`
+	UserAgent             string        `default:"/btc-crawl:0.1.2/"`
+	OnlyFetchDefaultSeeds bool
 }{}
 
 // dsn

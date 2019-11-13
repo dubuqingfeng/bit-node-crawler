@@ -25,7 +25,7 @@ func main() {
 			}
 		}()
 	}
-	fetcher := fetchers.NewNodeFetcher("btc")
+	fetcher := fetchers.NewNodeFetcher(utils.Config.CoinType)
 	fetcher.Run()
 	// exit sign
 	sig := make(chan os.Signal, 1)

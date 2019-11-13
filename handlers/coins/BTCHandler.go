@@ -7,6 +7,7 @@ import (
 	"github.com/dubuqingfeng/bit-node-crawler/handlers"
 	"github.com/dubuqingfeng/bit-node-crawler/helpers"
 	"github.com/dubuqingfeng/bit-node-crawler/models"
+	"github.com/dubuqingfeng/bit-node-crawler/utils"
 	log "github.com/sirupsen/logrus"
 	"net"
 	"time"
@@ -21,7 +22,7 @@ type BTCHandler struct {
 }
 
 func NewBTCHandler(address string) *BTCHandler {
-	b := BTCHandler{Address: address, ConnectTimeout: 10 * time.Second}
+	b := BTCHandler{Address: address, ConnectTimeout: utils.Config.ConnectTimeout}
 	return &b
 }
 
@@ -68,7 +69,6 @@ func (b *BTCHandler) Handshake() (result models.Result, err error) {
 	// read the version response.
 	msg, _, err := b.ReadMessage()
 	if err != nil {
-		log.Info(err)
 		return
 	}
 	vmsg, ok := msg.(*wire.MsgVersion)
