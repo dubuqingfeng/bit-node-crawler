@@ -16,9 +16,9 @@ var DefaultBTCDNSSeeds = []string{
 
 var DefaultBCHDNSSeeds = []string{
 	"seed.bitcoinabc.org",
-	"seed-abc.bitcoinforks.org",
+	// "seed-abc.bitcoinforks.org",
 	"btccash-seeder.bitcoinunlimited.info",
-	"seed.bitprim.org",
+	// "seed.bitprim.org",
 	"seed.deadalnix.me",
 	"seed.bchd.cash",
 }

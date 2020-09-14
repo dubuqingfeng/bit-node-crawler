@@ -25,10 +25,10 @@ func NewStatusFetcher(coin string) StatusFetcher {
 func (s *StatusFetcher) Run() {
 	// for loop
 	s.SyncNodes()
-	//for {
-	//	s.SyncNodes()
-	//	time.Sleep(20 * time.Second)
-	//}
+	// for {
+	// 	s.SyncNodes()
+	// 	time.Sleep(20 * time.Second)
+	// }
 }
 
 func (s *StatusFetcher) SyncNodes() {

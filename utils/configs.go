@@ -15,7 +15,7 @@ var Config = struct {
 	// crawl config
 	Concurrency           int           `default:"0"`
 	ConnectTimeout        time.Duration `default:"10s"`
-	UserAgent             string        `default:"/btc-crawl:0.1.2/"`
+	UserAgent             string        `default:"/btc-crawler:0.1.2/"`
 	OnlyFetchDefaultSeeds bool
 }{}
 
