@@ -9,12 +9,15 @@ import (
 	"time"
 )
 
-func InsertOrUpdatePeer(peer Result) error {
+func InsertOrUpdatePeer(peer Result, coin string) error {
 	conn := utils.Config.GlobalDatabase.Write.Name
 	if !dbs.CheckDBConnExists(conn) {
 		return errors.New("not found this conn")
 	}
 	tableName := "peers"
+	if coin == "bch" {
+		tableName = "bch_peers"
+	}
 	now := time.Now().UTC()
 	// update
 	stmt := fmt.Sprintf("INSERT INTO `" + tableName + "` (address, height, peers, user_agent, coin_type," +

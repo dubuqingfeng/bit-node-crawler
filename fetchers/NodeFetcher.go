@@ -75,12 +75,12 @@ func (n *NodeFetcher) HandleAddress(address string) {
 	// initialize the handler
 	handler, err := coins.HandlerFactory(n.Coin, address)
 	if err != nil {
-		log.Error(err)
+		log.WithField("address", address).WithField("step", "init").Error(err)
 		return
 	}
 	// connect the address
 	if err := handler.Connect(); err != nil {
-		log.Error(err)
+		log.WithField("address", address).WithField("step", "connect").Error(err)
 		return
 	}
 	// FILO stack
@@ -90,17 +90,17 @@ func (n *NodeFetcher) HandleAddress(address string) {
 	// send version and version ack
 	result, err := handler.Handshake()
 	if err != nil {
-		log.Error(err)
+		log.WithField("address", address).WithField("step", "handshake").Error(err)
 		return
 	}
 	// send getaddr
 	if err := handler.SendGetAddr(); err != nil {
-		log.Error(err)
+		log.WithField("address", address).WithField("step", "getaddr").Error(err)
 	}
 	// get addresses
 	addresses, err := handler.GetAddrResponse()
 	if err != nil {
-		log.Error(err)
+		log.WithField("address", address).WithField("step", "getaddrresponse").Error(err)
 	}
 	if len(addresses) != 0 && !reflect.DeepEqual(addresses, []string{address}) {
 		log.Info(addresses)
@@ -116,7 +116,8 @@ func (n *NodeFetcher) HandleAddress(address string) {
 
 func (n *NodeFetcher) WriteResult(result models.Result) {
 	// write to database.
-	if err := models.InsertOrUpdatePeer(result); err != nil {
+	log.Info(result)
+	if err := models.InsertOrUpdatePeer(result, n.Coin); err != nil {
 		log.Error(err)
 	}
 }

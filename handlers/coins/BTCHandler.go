@@ -129,9 +129,9 @@ func (b *BTCHandler) GetAddrResponse() ([]string, error) {
 }
 
 func (b *BTCHandler) WriteMessage(msg wire.Message) error {
-	return wire.WriteMessage(b.conn, msg, wire.ProtocolVersion, wire.MainNet)
+	return wire.WriteMessage(b.conn, msg, wire.ProtocolVersion, utils.BitcoinCashMainNet)
 }
 
 func (b *BTCHandler) ReadMessage() (wire.Message, []byte, error) {
-	return wire.ReadMessage(b.conn, wire.ProtocolVersion, wire.MainNet)
+	return wire.ReadMessage(b.conn, wire.ProtocolVersion, utils.BitcoinCashMainNet)
 }

@@ -21,6 +21,9 @@ var DefaultBCHDNSSeeds = []string{
 	// "seed.bitprim.org",
 	"seed.deadalnix.me",
 	"seed.bchd.cash",
+
+	"seed.flowee.cash",
+	"seed-bch.bitcoinforks.org",
 }
 
 var DefaultBSVDNSSeeds = []string{
