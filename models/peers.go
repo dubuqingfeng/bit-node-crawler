@@ -14,9 +14,9 @@ func InsertOrUpdatePeer(peer Result, coin string) error {
 	if !dbs.CheckDBConnExists(conn) {
 		return errors.New("not found this conn")
 	}
-	tableName := "peers"
-	if coin == "bch" {
-		tableName = "bch_peers"
+	tableName := coin + "_peers"
+	if utils.Config.PeersTableName != "" {
+		tableName = utils.Config.PeersTableName
 	}
 	now := time.Now().UTC()
 	// update
@@ -34,13 +34,16 @@ func InsertOrUpdatePeer(peer Result, coin string) error {
 }
 
 // For the use of StatusFetcher
-func GetAllPeers() ([]Result, error) {
+func GetAllPeers(coin string) ([]Result, error) {
 	conn := utils.Config.GlobalDatabase.Write.Name
 	var results []Result
 	if !dbs.CheckDBConnExists(conn) {
 		return results, errors.New("not found this conn")
 	}
-	tableName := "peers"
+	tableName := coin + "_peers"
+	if utils.Config.PeersTableName != "" {
+		tableName = utils.Config.PeersTableName
+	}
 	sql := fmt.Sprintf("select address, height, height_changed_at from %s;", tableName)
 	rows, err := dbs.DBMaps[conn].Query(sql)
 	if err != nil {
@@ -63,12 +66,15 @@ func GetAllPeers() ([]Result, error) {
 }
 
 // For the use of StatusFetcher
-func InsertOrUpdateNode(peer Result) error {
+func InsertOrUpdateNode(coin string, peer Result) error {
 	conn := utils.Config.GlobalDatabase.Write.Name
 	if !dbs.CheckDBConnExists(conn) {
 		return errors.New("not found this conn")
 	}
-	tableName := "peers"
+	tableName := coin + "_peers"
+	if utils.Config.PeersTableName != "" {
+		tableName = utils.Config.PeersTableName
+	}
 	now := time.Now().UTC()
 	// update
 	stmt := fmt.Sprintf("INSERT INTO `" + tableName + "` (address, height, peers, user_agent, coin_type," +

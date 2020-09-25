@@ -1,6 +1,8 @@
 name: ""
 monitorname: "电脑"
 debug: true
+cointype: "btc"
+onlyfetchdefaultseeds: false
 globaldatabase:
   read:
     name: "global:read"

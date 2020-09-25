@@ -34,7 +34,7 @@ func (s *StatusFetcher) Run() {
 func (s *StatusFetcher) SyncNodes() {
 	start := time.Now()
 	// get all address by database.
-	nodes, err := models.GetAllPeers()
+	nodes, err := models.GetAllPeers(s.Coin)
 	if err != nil {
 		log.Error(err)
 		return
@@ -92,7 +92,7 @@ func (s *StatusFetcher) SyncNode(node models.Result) {
 	} else {
 		result.HeightChangedAt = node.HeightChangedAt
 	}
-	if err := models.InsertOrUpdateNode(result); err != nil {
+	if err := models.InsertOrUpdateNode(s.Coin, result); err != nil {
 		log.Error(err)
 		return
 	}

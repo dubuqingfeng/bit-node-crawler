@@ -11,6 +11,7 @@ var Config = struct {
 	Debug          bool
 	MonitorName    string `default:"bit-node-crawler"`
 	CoinType       string `default:"btc"`
+	PeersTableName string
 	GlobalDatabase MySQLDB
 	// crawl config
 	Concurrency           int           `default:"0"`
