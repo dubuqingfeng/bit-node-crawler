@@ -18,11 +18,12 @@ type BTCHandler struct {
 	conn           net.Conn
 	Address        string
 	ConnectTimeout time.Duration
+	Coin           string
 	Peers          []string
 }
 
-func NewBTCHandler(address string) *BTCHandler {
-	b := BTCHandler{Address: address, ConnectTimeout: utils.Config.ConnectTimeout}
+func NewBTCHandler(address string, coin string) *BTCHandler {
+	b := BTCHandler{Address: address, Coin: coin, ConnectTimeout: utils.Config.ConnectTimeout}
 	return &b
 }
 
@@ -129,9 +130,16 @@ func (b *BTCHandler) GetAddrResponse() ([]string, error) {
 }
 
 func (b *BTCHandler) WriteMessage(msg wire.Message) error {
-	return wire.WriteMessage(b.conn, msg, wire.ProtocolVersion, utils.BitcoinCashMainNet)
+	return wire.WriteMessage(b.conn, msg, wire.ProtocolVersion, b.GetBitcoinNet())
 }
 
 func (b *BTCHandler) ReadMessage() (wire.Message, []byte, error) {
-	return wire.ReadMessage(b.conn, wire.ProtocolVersion, utils.BitcoinCashMainNet)
+	return wire.ReadMessage(b.conn, wire.ProtocolVersion, b.GetBitcoinNet())
+}
+
+func (b *BTCHandler) GetBitcoinNet() wire.BitcoinNet {
+	if b.Coin == "bch" {
+		return utils.BitcoinCashMainNet
+	}
+	return utils.BitcoinMainNet
 }

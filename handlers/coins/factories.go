@@ -9,7 +9,7 @@ import (
 func HandlerFactory(coin string, address string) (handlers.Handler, error) {
 	switch strings.ToLower(coin) {
 	case "btc", "bch", "bsv":
-		return NewBTCHandler(address), nil
+		return NewBTCHandler(address, coin), nil
 	default:
 		return nil, errors.New("not support this chain")
 	}

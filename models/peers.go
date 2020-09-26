@@ -21,7 +21,8 @@ func InsertOrUpdatePeer(peer Result, coin string) error {
 	now := time.Now().UTC()
 	// update
 	stmt := fmt.Sprintf("INSERT INTO `" + tableName + "` (address, height, peers, user_agent, coin_type," +
-		" timestamp, notified_at, created_at, updated_at, height_changed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  ON DUPLICATE KEY UPDATE " +
+		" timestamp, notified_at, created_at, updated_at, height_changed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  " +
+		"ON DUPLICATE KEY UPDATE " +
 		"height = ?, peers = ?, timestamp = ?, user_agent = ?, updated_at = ?, notified_at = ? ")
 	_, err := dbs.DBMaps[conn].Exec(stmt, peer.Address, peer.Height,
 		peer.Peers, peer.UserAgent, peer.CoinType, peer.Timestamp,
