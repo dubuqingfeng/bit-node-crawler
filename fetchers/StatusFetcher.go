@@ -97,3 +97,9 @@ func (s *StatusFetcher) SyncNode(node models.Result) {
 		return
 	}
 }
+
+func (s *StatusFetcher) ExportAllToCsv() {
+	columns, totalValues := models.ExportDatabase(s.Coin + "_peers")
+	filename := time.Now().Format("2006-01-02") + "_" + s.Coin + "_" + "peers" + ".csv"
+	models.WriteToCSV(filename, columns, totalValues)
+}
