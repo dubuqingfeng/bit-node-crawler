@@ -11,7 +11,6 @@ import (
 
 func init() {
 	utils.InitConfig("./configs/config.yaml")
-	// utils.ConfigLocalFileSystemLogger("./logs/", "monitor.log", 7*time.Hour*24, time.Second*20)
 	dbs.InitMySQLDB()
 }
 

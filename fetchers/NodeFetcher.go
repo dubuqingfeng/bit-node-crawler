@@ -44,7 +44,7 @@ func (n *NodeFetcher) AddPeers(peers []string) {
 // run the crawler
 func (n *NodeFetcher) Run() {
 	// get seeds from default dns
-	seedNodes := helpers.GetSeedsFromDNS(seeds.GetDefaultDNSSeeds(n.Coin))
+	seedNodes := helpers.GetSeedsFromDNS(seeds.GetDefaultDNSSeeds(n.Coin, ""))
 	log.Info(seedNodes)
 	// start crawl from seedNodes
 	go n.AddPeers(seedNodes)
@@ -53,12 +53,6 @@ func (n *NodeFetcher) Run() {
 	// receive the worker(peers) / result channel
 	for {
 		// close the channel when completed
-		// if len(n.checkFilter) <= len(n.completeFilter) {
-		// 	log.Info(111)
-		// 	close(n.workerChan)
-		// 	close(n.resultChan)
-		// 	break
-		// }
 		select {
 		case peers := <-n.workerChan:
 			go n.AddPeers(peers)

@@ -32,7 +32,7 @@ var DefaultBSVDNSSeeds = []string{
 	"seed.satoshisvision.network",
 }
 
-func GetDefaultDNSSeeds(coin string) []string {
+func GetDefaultDNSSeeds(coin, network string) []string {
 	// TODO add testnet
 	coin = strings.ToLower(coin)
 	if coin == "btc" {

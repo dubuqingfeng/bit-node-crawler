@@ -1,0 +1,13 @@
+# at https://docs.docker.com/compose/compose-file/
+version: '3.3'
+services:
+  bit-node-crawler:
+    container_name: bit-node-crawler
+    image: dubuqingfeng/bit-node-crawler
+    restart: always
+    entrypoint: "/app/bit-node-crawler"
+    volumes:
+      - ./configs/config.yaml:/app/configs/config.yaml
+      - ./logs:/app/logs
+    environment:
+      CONFIGOR_ENV: "production"

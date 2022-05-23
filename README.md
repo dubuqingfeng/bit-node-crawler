@@ -1,5 +1,12 @@
 ## bit node crawler
 
+比特币节点爬虫
+
+### Info
+
+```
+go run main.go
+```
 
 ### Related web sites
 
@@ -14,3 +21,4 @@
 + [rromanchuk/litecoin-network-crawler](https://github.com/rromanchuk/litecoin-network-crawler)
 + [Antti-Kaikkonen/CoinCrawler](https://github.com/Antti-Kaikkonen/CoinCrawler)
 + [nseidm1](https://github.com/nseidm1) / [com.noahseidman.digibytenodes](https://play.google.com/store/apps/details?id=com.noahseidman.digibytenodes&hl=en)
++ https://github.com/ec2/ethereum-node-crawler
